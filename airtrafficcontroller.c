@@ -39,6 +39,7 @@ int main() {
         printf("Error in creating unique key\n");
         exit(1);
     }
+
     struct msg_buffer message;
     struct details pdetails[11];
 
@@ -47,12 +48,9 @@ int main() {
         printf("Error in creating message queue\n");
         exit(1);
     }
-    printf("%d", msgid);
 
-    
-
-
-    while (1) {
+    while (1) 
+    {
         pid_t p = fork();
         if(p < 0){
             perror("Error in fork.");
@@ -104,64 +102,40 @@ int main() {
             break;
         
 
-        }else{
-            if (msgrcv(msgid, (void *)&message, sizeof(message) - sizeof(long), 400, 0) == -1) {
-            printf("Error in receiving message\n");
-            exit(1);
         }
+        else
+        {
+            if (msgrcv(msgid, (void *)&message, sizeof(message) - sizeof(long), 400, 0) == -1) 
+            {
+                printf("Error in receiving message\n");
+                exit(1);
+            }
 
-        pdetails[c].aair = message.msg_text[0];
-        pdetails[c].dair = message.msg_text[1];
-        pdetails[c].pid = message.msg_text[2];
-        pdetails[c].totalWeight = message.msg_text[3];
-        pdetails[c].ptype = message.msg_text[4];
-        pdetails[c].seats = message.msg_text[5];
+            pdetails[c].aair = message.msg_text[0];
+            pdetails[c].dair = message.msg_text[1];
+            pdetails[c].pid = message.msg_text[2];
+            pdetails[c].totalWeight = message.msg_text[3];
+            pdetails[c].ptype = message.msg_text[4];
+            pdetails[c].seats = message.msg_text[5];
 
-        message.msg_type = 140 + pdetails[c].aair;
+            message.msg_type = 140 + pdetails[c].aair;
 
-        // void reject_departure() {
-        //     // Get the next plane message
-        //     int plane_id = get_next_plane_message();
+            if (msgsnd(msgid, (void *)&message, sizeof(message) - sizeof(long), 0) == -1) {
+                printf("Error in sending message %s", buf);
+                exit(1);
+            }
 
-        //     // If the plane_id is -1, there are no more messages
-        //     if(plane_id == -1) {
-        //         printf("No more plane messages.\n");
-        //         return;
-        //     }
+            if (msgrcv(msgid, (void *)&message, sizeof(message) - sizeof(long), 180 + pdetails[c].aair, 0) == -1) {
+                printf("Error in receiving message\n");
+                exit(1);
+            }
 
-        //     // Send a rejection message to the plane
-        //     send_rejection_message(plane_id);
+            message.msg_type = 300 + pdetails[c].pid;
 
-        //     printf("Departure rejected for plane %d.\n", plane_id);
-        // }
-
-        if (msgsnd(msgid, (void *)&message, sizeof(message) - sizeof(long), 0) == -1) {
-            printf("Error in sending message %s", buf);
-            exit(1);
-        }
-
-        if (msgrcv(msgid, (void *)&message, sizeof(message) - sizeof(long), 180 + pdetails[c].aair, 0) == -1) {
-            printf("Error in receiving message\n");
-            exit(1);
-        }
-
-        message.msg_type = 300 + pdetails[c].pid;
-
-        if (msgsnd(msgid, (void *)&message, sizeof(message) - sizeof(long), 0) == -1) {
-            printf("Error in sending message %s", buf);
-            exit(1);
-        }
-
-        if(msgrcv(msgid, &message, sizeof(message.msg_text), 900, 0) == -1) {
-            perror("Error in receiving message");
-            exit(1);
-        }
-
-        // If message type is 900, terminate the program
-        if(message.msg_type == 900) {
-            printf("Termination call received from cleanup.\n");
-           return 0;
-        }
+            if (msgsnd(msgid, (void *)&message, sizeof(message) - sizeof(long), 0) == -1) {
+                printf("Error in sending message %s", buf);
+                exit(1);
+            }
     }
     }
 
