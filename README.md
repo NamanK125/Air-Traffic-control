@@ -5,17 +5,17 @@ Air Traffic controller: Forking, Mesage queue, Inter-Process Communication(ITC)
 Airport: Threading, mutex, Semaphore
 
 Process linking:
-Plane requests ATC
-ATC requests Airport
-Airport approves ATC
-ATC approves Plane
-Successfully takeoff
-Plane requests ATC
-ATC requests Airport
-Airport approves ATC
-ATC approves Plane
-Successfully land
-Deboard
+Plane requests ATC||
+ATC requests Airport||
+Airport approves ATC||
+ATC approves Plane||
+Successfully takeoff||
+Plane requests ATC||
+ATC requests Airport||
+Airport approves ATC||
+ATC approves Plane||
+Successfully land||
+Deboard||
 
 ################
 Sample Test Case:
