@@ -3,7 +3,8 @@
 Technology used: Operating Systems
 Air Traffic controller: Forking, Mesage queue, Inter-Process Communication(ITC)
 Airport: Threading, mutex, Semaphore
-
+Threads are used to handle multiple operations on a single airport.
+To handle multiple operaions on a runway, semaphore is used.
 Process linking:
 Plane requests ATC||
 ATC requests Airport||
